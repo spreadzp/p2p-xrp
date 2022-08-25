@@ -1,0 +1,163 @@
+<template>
+    <div>
+        <div>
+            <form id="roleForm" v-if="!userRole">
+                Choose your Role:
+                <input type="radio" id="borrower" name="role" value="borrower" checked>
+                <label for="borrower">Borrower</label>
+                &nbsp;&nbsp;
+                <input type="radio" id="loaner" name="role" value="loaner">
+                <label for="loaner">Loaner</label>
+                &nbsp;&nbsp;
+                <input type="radio" id="validator" name="role" value="validator">
+                <label for="Validator">Validator</label>
+                <br /><br />
+                <button type="button" @click="submitRole()">Submit Role</button>
+            </form>
+        </div>
+        <div v-if="userRole">
+            <p v-if="myPeerId">Your peerId: </p>
+            <p id="myPeerId">{{ myPeerId }}</p>
+            <p>Remote peers connected:</p>
+            <p v-for="(peer, index) in peers" :key="'pee_' + index" @click="choicePeer(peer.peerId )">{{ index + 1 }} {{
+                peer.peerId }} <b>{{peer.status}}</b></p>
+            <p>
+                Other peerId:
+                <input type="text" style="width: 420px" v-model="otherPeerId" /><button @click="findOtherPeer">
+                    Find
+                </button>
+            </p>
+
+            <div v-if="otherPeerMultiaddrs.length > 0 && otherPeerProtocols.length > 0">
+                <p>
+                    {{ otherPeerMultiaddr }}{{ otherPeerProtocol }}
+                    <button @click="dialProtocol">Dial protocol</button>
+                </p>
+            </div>
+            <p v-if="remotePeerId">Remote peer connected: {{ remotePeerId.toString() }}</p>
+            <p v-for="(msg, idx) in messages" :key="'msg_' + idx" v-html="msg">
+                {{ msg }}
+            </p>
+            <div v-if="remotePeerId">
+                <input type="text" style="width: 600px" v-model="chatMessage" /><button @click="sendMessage">
+                    Send message
+                </button>
+            </div>
+            <div v-if="chatQueue">
+                <button @click="sendProposal">
+                    Send proposal
+                </button>
+            </div>
+            <p v-if="creditInfo">Handle credit: {{ creditInfo }}</p>
+            <p v-for="(prp, idx) in chatProposals" :key="'msg_' + idx" v-html="prp">
+                {{ prp }}
+            </p>
+
+        </div>
+        <h1>Token Test Harness</h1>
+        <form id="theForm" v-if="userRole">
+            <br /><br />
+            <table>
+                <tr valign="top">
+                    <td>
+                        <table>
+                            <tr valign="top">
+                                <td align="center" valign="top">
+                                    <button type="button" @click="getAccount('standby')">Get Account</button>
+                                    <button type="button" @click="sendXRP()">Send XRP&#62;</button>
+                                </td>
+                                <table>
+                                    <tr valign="top">
+                                        <td align="right">
+                                            Account
+                                        </td>
+                                        <td>
+                                            <input type="text" id="standbyAccountField" size="40"></input>
+                                            <br>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">
+                                            Public Key
+                                        </td>
+                                        <td>
+                                            <input type="text" id="standbyPubKeyField" size="40"></input>
+                                            <br>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">
+                                            Private Key
+                                        </td>
+                                        <td>
+                                            <input type="text" id="standbyPrivKeyField" size="40"></input>
+                                            <br>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">
+                                            Seed
+                                        </td>
+                                        <td>
+                                            <input type="text" id="standbySeedField" size="40"></input>
+                                            <br>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">
+                                            XRP Balance
+                                        </td>
+                                        <td>
+                                            <input type="text" id="standbyBalanceField" size="40"></input>
+                                            <br>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">
+                                            Amount
+                                        </td>
+                                        <td>
+                                            <input type="text" id="standbyAmountField" size="40"></input>
+                                            <br>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">
+                                            Destination
+                                        </td>
+                                        <td>
+                                            <input type="text" id="standbyDestinationField" size="40"></input>
+                                            <br>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p align="right" v-if="showWindowTx">
+                                    <textarea id="standbyResultField" cols="80" rows="20"></textarea>
+                                </p>
+                    </td>
+                    </td>
+
+                </tr>
+                <tr valign="top" v-if="userRole === 'borrower'">
+                    <p align="right">
+                        <textarea id="singInfo" cols="80" rows="20"></textarea>
+                    </p>
+                    <td>
+
+                <tr valign="top">
+                    <td align="center" valign="top">
+                        <button type="button" @click="signInfo()">RequestCredit&#62;</button>
+                    </td>
+                </tr>
+                </td>
+                </tr>
+            </table>
+            </td>
+
+            </tr>
+            </table>
+        </form>
+
+    </div>
+
+</template>
