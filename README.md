@@ -1,6 +1,6 @@
 # js-libp2p-xrpl
 
-Minimal chat example using js-libp2p and Vue
+Minimal p2p example using js-libp2p, xrpl and Vue
 
 ## Start locally 
 - **npm update**
