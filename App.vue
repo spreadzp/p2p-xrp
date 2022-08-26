@@ -363,6 +363,7 @@ export default class App extends Vue {
         let wallet = await localStorage.getItem("wallet")
         const client = new xrpl.Client(net)
         await client.connect()
+        this.showWindowTx = true;
         if (wallet === null) {
 
             let results = 'Connecting to ' + net + '....'
@@ -370,16 +371,16 @@ export default class App extends Vue {
             // This uses the default faucet for Testnet/Devnet
             let faucetHost = "faucet-nft.ripple.com";
             if (type == 'standby') {
-                document.getElementById('standbyResultField').value = results
+                document.getElementById('standbyResultField')?.value = results
             } else {
-                document.getElementById('operationalResultField').value = results
+                document.getElementById('operationalResultField')?.value = results
             }
 
             results += '\nConnected, funding wallet.'
             if (type == 'standby') {
-                document.getElementById('standbyResultField').value = results
+                document.getElementById('standbyResultField')?.value = results
             } else {
-                document.getElementById('operationalResultField').value = results
+                document.getElementById('operationalResultField')?.value = results
             }
 
             // -----------------------------------Create and fund a test account wallet
@@ -410,12 +411,12 @@ export default class App extends Vue {
                 }
             }
         } else {
-            const wallet = JSON.parse(await localStorage.getItem("wallet"));
-            const bal = await client.getXrpBalance(wallet.classicAddress)
-            document.getElementById('standbyAccountField').value = wallet.classicAddress;
-            document.getElementById('standbyPubKeyField').value = wallet.publicKey;
-            document.getElementById('standbyPrivKeyField').value = wallet.privateKey;
-            document.getElementById('standbySeedField').value = wallet.seed;
+            const walletLocale = JSON.parse(wallet);
+            const bal = await client.getXrpBalance(wallet?.classicAddress)
+            document.getElementById('standbyAccountField').value = walletLocale?.classicAddress;
+            document.getElementById('standbyPubKeyField').value = walletLocale?.publicKey;
+            document.getElementById('standbyPrivKeyField').value = walletLocale?.privateKey;
+            document.getElementById('standbySeedField').value = walletLocale?.seed;
             document.getElementById('standbyBalanceField').value = bal;
         }
     }
@@ -529,8 +530,8 @@ export default class App extends Vue {
             const data = {
                 peerId: peerId,
                 status: this.userRole,
-                xrpAddress: wallet.classicAddress,
-                name: wallet.classicAddress,
+                xrpAddress: wallet?.classicAddress,
+                name: wallet?.classicAddress,
                 kycData: true,
                 latitude: "111",
                 longitude: "888",
@@ -597,7 +598,7 @@ export default class App extends Vue {
             console.log(wallet);
           const creditInfo = {
             peerId: id,
-            xrpAddress: wallet.classicAddress,
+            xrpAddress: wallet.classicAddress || "",
             amount: 100,
             kycInfo: true,
             longitude: 152,
